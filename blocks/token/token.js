@@ -1,5 +1,12 @@
 import { div } from '../../scripts/dom-helpers.js';
 
+function displayToken(token) {
+  if (!token) return '';
+  let parts = token.split('.');
+  parts = parts.map((part) => part.substring(0, 10) + '...');
+  return parts.join('.');
+}
+
 export default async function decorate(block) {
   const orgs = [
     'adobe',
@@ -25,8 +32,8 @@ export default async function decorate(block) {
       ...orgsdata.map((data) => (
         div({ class: 'row'},
           div(data.org),
-          div(data.email),
-          div(data['x-auth-token'])
+          div(data.profile?.email),
+          div(displayToken(data.profile?.['x-auth-token'])),
         )
       ))
     )
