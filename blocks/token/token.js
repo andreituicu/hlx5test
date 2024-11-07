@@ -12,6 +12,7 @@ export default async function decorate(block) {
     'adobe',
     'aemsites',
     'hlxsites',
+    'stericycle',
   ];
 
   const orgsdata = [];
