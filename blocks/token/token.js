@@ -1,3 +1,5 @@
+import { div } from '../../scripts/dom-helpers.js';
+
 export default async function decorate(block) {
   const orgs = [
     'adobe',
@@ -7,7 +9,7 @@ export default async function decorate(block) {
 
   const orgsdata = [];
   await Promise.allSettled(orgs.map(async (org) => {
-    const res = await fetch(`https://api.github.com/profile/${org}/?reveal_token=true`);
+    const res = await fetch(`https://admin.hlx.page/profile/${org}/?reveal_token=true`);
     if (!res.ok) return;
     const data = await res.json();
     orgsdata.push({ org, ...data});
