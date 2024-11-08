@@ -8,28 +8,23 @@ function displayToken(token) {
 }
 
 export default async function decorate(block) {
-  const orgsdata = [];
-  await Promise.allSettled(orgs.map(async (org) => {
-    const res = await fetch(`https://admin.hlx.page/profile/?reveal_token=true`, { method: "GET", credentials: "include" });
-    if (!res.ok) return;
-    const data = await res.json();
-    orgsdata.push({ org, ...data});
-  }));
+  const res = await fetch(`https://admin.hlx.page/profile/?reveal_token=true`, { method: "GET", credentials: "include" });
+  if (!res.ok) {
+    block.append(div({ class: 'error' }, 'You are not logged into Helix Admin'));
+  }
+
+  const data = await res.json(); 
 
   block.append(
     div({ class: 'container'},
       div({ class: 'row header'},
-        div('Organization'),
         div('Email'),
         div('Token'),
       ),
-      ...orgsdata.map((data) => (
-        div({ class: 'row'},
-          div(data.org),
-          div(data.profile?.email),
-          div(displayToken(data.profile?.['x-auth-token'])),
-        )
-      ))
+      div({ class: 'row'},
+        div(data.profile?.email),
+        div(displayToken(data.profile?.['x-auth-token'])),
+      )
     )
   );
 }
