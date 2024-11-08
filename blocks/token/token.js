@@ -15,7 +15,7 @@ export default async function decorate(block) {
     'stericycle',
   ];
 
-  const resp = await fetch('https://admin.hlx.page/config/andreituicu/sites.json', { credetials: 'include'});
+  const resp = await fetch('https://admin.hlx.page/config/andreituicu/sites.json', { method: "GET", credentials: "include" });
   if (!resp.ok) {
     console.log(resp.statusText);
   } else {
