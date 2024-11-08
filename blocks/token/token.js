@@ -15,6 +15,13 @@ export default async function decorate(block) {
     'stericycle',
   ];
 
+  const resp = await fetch('https://admin.hlx.page/config/andreituicu/sites.json', { credetials: 'include'});
+  if (!resp.ok) {
+    console.log(resp.statusText);
+  } else {
+    console.log(await resp.json());
+  }
+
   const orgsdata = [];
   await Promise.allSettled(orgs.map(async (org) => {
     const res = await fetch(`https://admin.hlx.page/profile/${org}/?reveal_token=true`);
