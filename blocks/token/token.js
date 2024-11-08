@@ -8,23 +8,9 @@ function displayToken(token) {
 }
 
 export default async function decorate(block) {
-  const orgs = [
-    'adobe',
-    'aemsites',
-    'hlxsites',
-    'stericycle',
-  ];
-
-  // const resp = await fetch('https://admin.hlx.page/config/andreituicu/sites.json', { method: "GET", credentials: "include" });
-  // if (!resp.ok) {
-  //   console.log(resp.statusText);
-  // } else {
-  //   console.log(await resp.json());
-  // }
-
   const orgsdata = [];
   await Promise.allSettled(orgs.map(async (org) => {
-    const res = await fetch(`https://admin.hlx.page/profile/${org}/?reveal_token=true`, { method: "GET", credentials: "include" });
+    const res = await fetch(`https://admin.hlx.page/profile/?reveal_token=true`, { method: "GET", credentials: "include" });
     if (!res.ok) return;
     const data = await res.json();
     orgsdata.push({ org, ...data});
