@@ -11,6 +11,7 @@ export default async function decorate(block) {
   const res = await fetch(`https://admin.hlx.page/profile/?reveal_token=true`, { method: "GET", credentials: "include" });
   if (!res.ok) {
     block.append(div({ class: 'error' }, 'You are not logged into Helix Admin or you don\'t have third party cookies enabled.'));
+    return;
   }
 
   const data = await res.json(); 
