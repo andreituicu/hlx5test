@@ -8,9 +8,9 @@ function displayToken(token) {
 }
 
 export default async function decorate(block) {
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    console.log('message', message);
-  });
+  // chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  //   console.log('message', message);
+  // });
 
   const sidekickId = 'igkmdomcgoebiipaifhmpfjhbjccggml';
   const msg = {
