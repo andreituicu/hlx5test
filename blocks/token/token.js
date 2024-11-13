@@ -18,7 +18,7 @@ export default async function decorate(block) {
   };
 
   console.log('sending message to sidekick:', sidekickId, msg);
-  chrome.runtime.sendMessage(sidekickId, JSON.stringify(msg), (resp) => {
+  chrome.runtime.sendMessage(sidekickId, msg, (resp) => {
     if (resp) {
       console.log('got response from sidekick:', resp);
     } else {
