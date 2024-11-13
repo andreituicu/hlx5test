@@ -17,26 +17,14 @@ export default async function decorate(block) {
     action: 'getAuthInfo',
   };
 
-  function handler(resp) {
-    console.log('got response from sidekick:', resp);
-    window.close();
-  }
-
-  if (window.browser) {
-    browser.runtime.sendMessage(sidekickId, JSON.stringify(msg))
-      .then(handler)
-      .catch((err) => {
-        console.error('error invoking extension:', err);
-      });
-  } else {
-    chrome.runtime.sendMessage(sidekickId, JSON.stringify(msg), (resp) => {
-      if (resp) {
-        handler(resp);
-      } else {
-        console.error('error invoking extension:', chrome.runtime.lastError);
-      }
-    });
-  }
+  console.log('sending message to sidekick:', sidekickId, msg);
+  chrome.runtime.sendMessage(sidekickId, JSON.stringify(msg), (resp) => {
+    if (resp) {
+      console.log('got response from sidekick:', resp);
+    } else {
+      console.error('error invoking extension:', chrome.runtime.lastError);
+    }
+  });
 
   // const orgs = [
   //   'adobe',
