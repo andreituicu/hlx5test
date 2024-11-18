@@ -12,7 +12,7 @@ export default async function decorate(block) {
   //   console.log('message', message);
   // });
 
-  const sidekickId = 'igkmdomcgoebiipaifhmpfjhbjccggml';
+  const sidekickId = 'dghefbmfciefemdgmbhfkghomknobfaj';
   const msg = {
     action: 'getAuthInfo',
   };
