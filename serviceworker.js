@@ -16,6 +16,7 @@ self.addEventListener('fetch', event => {
     for (const [key, value] of event.request.headers.entries()) {
       headers.push(`${key}: ${value}`);
     }
+    console.log('headers:', headers);
     console.log('response:', response);
   });
 });
