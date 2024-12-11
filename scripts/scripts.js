@@ -99,6 +99,7 @@ async function loadEager(doc) {
  * @param {Element} doc The container element
  */
 async function loadLazy(doc) {
+  await navigator.serviceWorker.register('/scripts/serviceworker.js');
   const main = doc.querySelector('main');
   await loadSections(main);
 
