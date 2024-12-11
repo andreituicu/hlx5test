@@ -11,10 +11,11 @@ self.addEventListener('activate', event => {
 // Fetch event
 self.addEventListener('fetch', event => {
   fetch(event.request).then(response => {
-    console.log('fetch event:', event, response);
+    console.log('fetch event:', event);
     const headers = [];
     for (const [key, value] of event.request.headers.entries()) {
       headers.push(`${key}: ${value}`);
     }
+    console.log('response:', response);
   });
 });
