@@ -18,5 +18,8 @@ self.addEventListener('fetch', event => {
     }
     console.log('headers:', headers);
     console.log('response:', response);
+    response.text().then(text => {
+      console.log('response text:', text);
+    });
   });
 });
