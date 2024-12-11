@@ -11,4 +11,9 @@ self.addEventListener('activate', event => {
 // Fetch event
 self.addEventListener('fetch', event => {
   console.log('fetch event:', event);
+  const headers = [];
+  for (const [key, value] of event.request.headers.entries()) {
+    headers.push(`${key}: ${value}`);
+  }
+  console.log(headers);
 });
