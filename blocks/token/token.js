@@ -10,6 +10,7 @@ function displayToken(token) {
 export default async function decorate(block) {
   const orgs = [
     'adobe',
+    'adobe-rnd',
     'aemsites',
     'hlxsites',
     'stericycle',
