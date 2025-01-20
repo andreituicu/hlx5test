@@ -26,4 +26,4 @@ self.addEventListener('fetch', event => {
   }, 1000);
 });
 
-fetch('https://admin.hlx.page/status/andreituicu/hlx5test/main');
+fetch('https://admin.hlx.page/status/andreituicu/hlx5test/test');
