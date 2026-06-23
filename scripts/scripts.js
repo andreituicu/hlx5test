@@ -15,7 +15,6 @@ import {
 } from './aem.js';
 
 if (window.trustedTypes && window.trustedTypes.createPolicy) {
-
   const innerTT = window.trustedTypes.createPolicy('tt-inner', {
     // avoid stack overflow
     createHTML: (s) => s,
@@ -30,7 +29,8 @@ if (window.trustedTypes && window.trustedTypes.createPolicy) {
      * @returns {undefined|string} The sanitized HTML string or undefined if the input is unsafe
      */
     createHTML: (input, type, sink) => {
-      // DOMPurify or similar sanitization library may be implemented here if a harder policy is desired, with a tradeoff on performance.
+      // DOMPurify or similar sanitization library may be implemented here if
+      // a harder policy is desired, with a tradeoff on performance.
       let processedInput = input;
       if (/srcdoc\s*=/i.test(processedInput)) {
         const doc = new DOMParser().parseFromString(innerTT.createHTML(processedInput), 'text/html');
@@ -47,22 +47,27 @@ if (window.trustedTypes && window.trustedTypes.createPolicy) {
     },
 
     /**
-     * All script URL creation goes through this function, so we can sanitize it for known attack vectors.
+     * All script URL creation goes through this function, so we can sanitize
+     * it for known attack vectors.
      * @param {string} input The script URL input string
      * @returns {string} The sanitized script URL string
      */
+    // eslint-disable-next-line arrow-body-style
     createScriptURL: (input) => {
       // a trusted origin allowlist approach may be implemented here if a harder policy is desired
       return input;
     },
 
     /**
-     * All script creation goes through this function, so we can sanitize it for known attack vectors.
+     * All script creation goes through this function, so we can sanitize it
+     * for known attack vectors.
      * @param {string} input The script input string
      * @returns {string} The sanitized script string
      */
+    // eslint-disable-next-line arrow-body-style
     createScript: (input) => {
-      // Uncomment to block eval and script.text= assignments entirely (needs testing with your website code and martech stack):
+      // Uncomment to block eval and script.text= assignments entirely
+      // (needs testing with your website code and martech stack):
       // throw new TypeError('Inline script execution blocked by policy');
       return input;
     },
