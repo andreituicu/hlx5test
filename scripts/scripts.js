@@ -14,6 +14,61 @@ import {
   sampleRUM,
 } from './aem.js';
 
+if (window.trustedTypes && window.trustedTypes.createPolicy) {
+
+  const innerTT = window.trustedTypes.createPolicy('tt-inner', {
+    // avoid stack overflow
+    createHTML: (s) => s,
+  });
+
+  window.trustedTypes.createPolicy('default', {
+    /**
+     * All HTML creation goes through this function, so we can sanitize it for known attack vectors.
+     * @param {string} input The HTML input string
+     * @param {string} type The type of HTML being created
+     * @param {string} sink The sink where the HTML will be used
+     * @returns {undefined|string} The sanitized HTML string or undefined if the input is unsafe
+     */
+    createHTML: (input, type, sink) => {
+      // DOMPurify or similar sanitization library may be implemented here if a harder policy is desired, with a tradeoff on performance.
+      let processedInput = input;
+      if (/srcdoc\s*=/i.test(processedInput)) {
+        const doc = new DOMParser().parseFromString(innerTT.createHTML(processedInput), 'text/html');
+        doc.querySelectorAll('[srcdoc]').forEach((el) => el.removeAttribute('srcdoc'));
+        processedInput = doc.body.innerHTML;
+      }
+
+      if (sink.includes('createContextualFragment') || sink.includes('Document write')) {
+        const doc = new DOMParser().parseFromString(innerTT.createHTML(processedInput), 'text/html');
+        doc.querySelectorAll('script').forEach((el) => el.remove());
+        processedInput = doc.body.innerHTML;
+      }
+      return processedInput;
+    },
+
+    /**
+     * All script URL creation goes through this function, so we can sanitize it for known attack vectors.
+     * @param {string} input The script URL input string
+     * @returns {string} The sanitized script URL string
+     */
+    createScriptURL: (input) => {
+      // a trusted origin allowlist approach may be implemented here if a harder policy is desired
+      return input;
+    },
+
+    /**
+     * All script creation goes through this function, so we can sanitize it for known attack vectors.
+     * @param {string} input The script input string
+     * @returns {string} The sanitized script string
+     */
+    createScript: (input) => {
+      // Uncomment to block eval and script.text= assignments entirely (needs testing with your website code and martech stack):
+      // throw new TypeError('Inline script execution blocked by policy');
+      return input;
+    },
+  });
+}
+
 /**
  * Builds hero block and prepends to main in a new section.
  * @param {Element} main The container element
@@ -69,6 +124,22 @@ export function decorateMain(main) {
 }
 
 /**
+ * TEMPORARY — Trusted Types test harness. DO NOT COMMIT / DO NOT SHIP.
+ * Reads `?exploit=<payload>` and injects it UNSANITISED at the start of <main>
+ * via innerHTML, so the default Trusted Types policy can be exercised with
+ * prepared payloads. Remove before merging.
+ * @param {Element} main The main element
+ */
+function injectExploitParam(main) {
+  const payload = new URLSearchParams(window.location.search).get('exploit');
+  if (!payload) return;
+  const probe = document.createElement('div');
+  probe.className = 'tt-exploit-probe';
+  probe.innerHTML = payload;
+  main.prepend(probe);
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
@@ -77,6 +148,7 @@ async function loadEager(doc) {
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
+    injectExploitParam(main);
     decorateMain(main);
     document.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
